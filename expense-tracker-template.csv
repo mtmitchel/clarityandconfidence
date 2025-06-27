@@ -1,0 +1,6 @@
+Date,Amount,Category,Subcategory,Description,PaymentMethod,IsReimbursable_YN,IsTaxDeductible_YN,ReceiptAttached_YN
+2024-01-15,350.00,Legal Fees,Attorney fees,"Initial consultation with Attorney Smith",Credit Card,No,Yes,Yes
+2024-01-16,25.50,Child Care,After-school care,"Late pickup fee at daycare",Cash,Yes,No,Yes
+2024-01-18,1200.00,Legal Fees,Court filing fees,"Divorce petition filing fee",Check,No,Yes,Yes
+2024-01-20,45.00,Living Expenses,Groceries,"Weekly grocery shopping",Debit Card,No,No,Yes
+2024-01-22,150.00,Professional Services,Financial advisor,"Meeting with divorce financial planner",Credit Card,No,Yes,Yes
