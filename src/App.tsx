@@ -5,13 +5,8 @@ import QuickEscape from './components/QuickEscape';
 // Import all section components
 import Welcome from './components/sections/Welcome';
 import UnderstandingMoney from './components/sections/UnderstandingMoney';
-import LegalPaths from './components/sections/LegalPaths';
 import Children from './components/sections/Children';
-import Resilience from './components/sections/Resilience';
 import Timeline from './components/sections/Timeline';
-
-// Import Resources separately to avoid potential import issues
-import Resources from './components/sections/Resources';
 
 function App() {
   const [currentSection, setCurrentSection] = useState('welcome');
@@ -36,15 +31,15 @@ function App() {
       case 'understanding-money':
         return <UnderstandingMoney />;
       case 'legal-paths':
-        return <LegalPaths />;
+        return <div className="p-8 text-center"><h1>Legal Paths section temporarily unavailable</h1></div>;
       case 'children':
         return <Children />;
       case 'timeline':
         return <Timeline />;
       case 'resources':
-        return <Resources />;
+        return <div className="p-8 text-center"><h1>Resources section temporarily unavailable</h1></div>;
       case 'resilience':
-        return <Resilience />;
+        return <div className="p-8 text-center"><h1>Resilience section temporarily unavailable</h1></div>;
       default:
         return <Welcome />;
     }
