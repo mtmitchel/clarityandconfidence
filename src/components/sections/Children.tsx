@@ -159,7 +159,7 @@ const Children: React.FC = () => {
         </p>
       </div>
 
-      {/* Gentle Guidance */}
+      {/* Guidance */}
       <div className="bg-calm-50 border border-calm-200 rounded-lg p-6">
         <h3 className="font-medium text-calm-800 mb-3">Remember as you work through this</h3>
         <div className="space-y-2 text-sm text-calm-700">

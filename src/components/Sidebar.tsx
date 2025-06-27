@@ -7,7 +7,9 @@ import {
   Baby, 
   Users, 
   BookOpen, 
-  Shield 
+  Shield,
+  BarChart3,
+  Calendar
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -17,10 +19,12 @@ interface SidebarProps {
 
 const navigationItems = [
   { id: 'welcome', label: 'Welcome', icon: Home },
+  { id: 'dashboard', label: 'Dashboard', icon: BarChart3 },
   { id: 'checking-in', label: 'Checking in', icon: Heart },
   { id: 'understanding-money', label: 'Understanding your money', icon: DollarSign },
   { id: 'legal-paths', label: 'Exploring legal paths', icon: Scale },
   { id: 'children', label: 'Focusing on the children', icon: Baby },
+  { id: 'timeline', label: 'Timeline & Planning', icon: Calendar },
   { id: 'local-support', label: 'Finding local support', icon: Users },
   { id: 'resources', label: 'Helpful resources', icon: BookOpen },
   { id: 'resilience', label: 'Building resilience', icon: Shield },
@@ -31,10 +35,10 @@ const Sidebar: React.FC<SidebarProps> = ({ currentSection, onSectionChange }) =>
     <aside className="w-80 bg-calm-50 border-r border-calm-200 h-full flex flex-col">
       <div className="p-6 border-b border-calm-200">
         <h1 className="text-xl font-semibold text-calm-800 leading-tight">
-          The Clarity and Confidence Tool
+          Your Clarity & Confidence Guide
         </h1>
         <p className="text-sm text-calm-600 mt-2">
-          Supporting you through separation in Hamilton County, Ohio
+          Personal resources for your journey forward
         </p>
       </div>
       

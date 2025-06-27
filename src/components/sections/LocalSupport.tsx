@@ -256,7 +256,7 @@ const LocalSupport: React.FC = () => {
           <h1 className="text-3xl font-semibold text-calm-800">Finding local support in Hamilton County</h1>
         </div>
         <p className="text-lg text-slate-600 leading-relaxed">
-          You don't have to navigate this journey alone. Hamilton County offers many resources 
+          You don't have to navigate this process alone. Hamilton County offers many resources 
           to support you through separation and divorce. These services can provide legal help, 
           emotional support, and practical guidance.
         </p>
@@ -334,8 +334,7 @@ const LocalSupport: React.FC = () => {
       {/* Footer Message */}
       <div className="text-center pt-6">
         <p className="text-slate-600 leading-relaxed">
-          Remember: seeking help is a sign of strength, not weakness. These resources exist 
-          because going through separation is challenging, and support makes a real difference.
+          These resources exist to help people navigate challenging transitions. Don't hesitate to reach out when you need support.
         </p>
       </div>
     </div>

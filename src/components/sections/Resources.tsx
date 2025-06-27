@@ -244,14 +244,14 @@ const Resources: React.FC = () => {
         </div>
         <p className="text-lg text-slate-600 leading-relaxed">
           Learning from others who have walked this path can provide comfort, practical advice, 
-          and hope. These resources offer different perspectives and tools to support you 
-          through your journey.
+          and perspective. These resources offer different viewpoints and tools to support you 
+          through this process.
         </p>
       </div>
 
       {/* Important Note */}
       <div className="bg-calm-50 border border-calm-200 rounded-lg p-6">
-        <h3 className="font-medium text-calm-800 mb-2">A gentle reminder</h3>
+        <h3 className="font-medium text-calm-800 mb-2">Important note</h3>
         <p className="text-calm-700 text-sm leading-relaxed">
           While these resources can be incredibly helpful, remember that every situation is unique. 
           What works for one person may not work for another. Take what serves you and leave the rest. 
@@ -345,7 +345,7 @@ const Resources: React.FC = () => {
       {/* Encouragement */}
       <div className="text-center pt-6">
         <p className="text-slate-600 leading-relaxed">
-          Remember: you're not alone in this journey. Millions of people have navigated separation 
+          You're not alone in this process. Millions of people have navigated separation 
           and divorce and found happiness on the other side. These resources represent the wisdom 
           and experience of many who want to help you through this challenging time.
         </p>

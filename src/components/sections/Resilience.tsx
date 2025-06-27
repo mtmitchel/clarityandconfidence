@@ -305,8 +305,7 @@ const Resilience: React.FC = () => {
       <div className="bg-calm-50 border border-calm-200 rounded-lg p-6">
         <h3 className="font-medium text-calm-800 mb-4">Building your own support system</h3>
         <p className="text-calm-700 mb-4 text-sm">
-          Remember: you can't pour from an empty cup. Taking care of yourself is essential 
-          for being the parent your children need.
+          Taking care of yourself is essential for being able to support your children effectively.
         </p>
         <div className="grid md:grid-cols-2 gap-4 text-sm">
           <div className="space-y-2">
@@ -332,7 +331,7 @@ const Resilience: React.FC = () => {
 
       {/* Self-Care Reminders */}
       <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6">
-        <h3 className="font-medium text-yellow-800 mb-3">Gentle reminders for yourself</h3>
+        <h3 className="font-medium text-yellow-800 mb-3">Important reminders</h3>
         <div className="space-y-2 text-sm text-yellow-800">
           <p>• <strong>Progress, not perfection:</strong> You don't need to be perfect. Small improvements make a big difference.</p>
           <p>• <strong>It takes time:</strong> Healing and adjustment happen gradually. Be patient with yourself and your children.</p>
@@ -345,7 +344,7 @@ const Resilience: React.FC = () => {
 
       {/* Looking Forward */}
       <div className="text-center pt-6 space-y-4">
-        <h3 className="text-xl font-medium text-slate-800">Looking forward with hope</h3>
+        <h3 className="text-xl font-medium text-slate-800">Moving forward</h3>
         <p className="text-slate-600 leading-relaxed max-w-3xl mx-auto">
           While this transition is challenging, it's also an opportunity to create a new kind of family - 
           one that may look different but can be just as loving, supportive, and strong. Many families 
@@ -353,8 +352,8 @@ const Resilience: React.FC = () => {
           resilience than they had before.
         </p>
         <p className="text-slate-600 leading-relaxed max-w-3xl mx-auto">
-          Your children are fortunate to have a parent who cares enough to seek guidance and work 
-          toward their wellbeing. That care and intention will serve them well, both now and in the future.
+          Taking time to learn about effective co-parenting and seeking guidance when needed 
+          will benefit your children both now and in the future.
         </p>
       </div>
     </div>

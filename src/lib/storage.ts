@@ -8,6 +8,10 @@ export const STORAGE_KEYS = {
   LEGAL_PATH: 'clarity_tool_legal_path',
   PARENTING_CHECKLIST: 'clarity_tool_parenting_checklist',
   USER_PREFERENCES: 'clarity_tool_preferences',
+  MOOD_TRACKING: 'clarity_tool_mood_tracking',
+  DASHBOARD_DATA: 'clarity_tool_dashboard',
+  TIMELINE_DATA: 'clarity_tool_timeline',
+  FINANCIAL_GOALS: 'clarity_tool_financial_goals',
 } as const;
 
 export interface JournalEntry {
@@ -49,6 +53,48 @@ export interface ParentingChecklistItem {
   notes?: string;
 }
 
+// New interfaces for enhanced features
+export interface MoodEntry {
+  id: string;
+  date: string;
+  mood: number; // 1-10 scale
+  notes?: string;
+  energy: number; // 1-10 scale
+  stress: number; // 1-10 scale
+  activities?: string[];
+}
+
+export interface TimelineItem {
+  id: string;
+  title: string;
+  description: string;
+  dueDate?: string;
+  completed: boolean;
+  category: 'legal' | 'financial' | 'personal' | 'children';
+  priority: 'low' | 'medium' | 'high';
+  createdAt: string;
+  completedAt?: string;
+}
+
+export interface DashboardData {
+  lastUpdated: string;
+  sectionsCompleted: string[];
+  totalProgress: number;
+  weeklyMoodAverage?: number;
+  urgentTasks: number;
+  upcomingDeadlines: number;
+}
+
+export interface FinancialGoal {
+  id: string;
+  title: string;
+  targetAmount: number;
+  currentAmount: number;
+  targetDate?: string;
+  category: 'emergency-fund' | 'moving-costs' | 'legal-fees' | 'debt-reduction' | 'other';
+  createdAt: string;
+}
+
 // Generic storage functions
 export const saveToStorage = <T>(key: string, data: T): void => {
   try {
@@ -84,6 +130,45 @@ export const clearAllStorage = (): void => {
     });
   } catch (error) {
     console.error('Error clearing all localStorage:', error);
+  }
+};
+
+// Data export functionality for backup
+export const exportAllData = (): string => {
+  try {
+    const allData: Record<string, any> = {};
+    Object.entries(STORAGE_KEYS).forEach(([name, key]) => {
+      const data = localStorage.getItem(key);
+      if (data) {
+        allData[name] = JSON.parse(data);
+      }
+    });
+    
+    return JSON.stringify({
+      exported: new Date().toISOString(),
+      data: allData
+    }, null, 2);
+  } catch (error) {
+    console.error('Error exporting data:', error);
+    return '';
+  }
+};
+
+export const importAllData = (jsonData: string): boolean => {
+  try {
+    const parsed = JSON.parse(jsonData);
+    if (parsed.data) {
+      Object.entries(STORAGE_KEYS).forEach(([name, key]) => {
+        if (parsed.data[name]) {
+          localStorage.setItem(key, JSON.stringify(parsed.data[name]));
+        }
+      });
+      return true;
+    }
+    return false;
+  } catch (error) {
+    console.error('Error importing data:', error);
+    return false;
   }
 };
 
@@ -146,4 +231,43 @@ export const saveParentingChecklist = (items: ParentingChecklistItem[]): void =>
 
 export const loadParentingChecklist = (): ParentingChecklistItem[] => {
   return loadFromStorage(STORAGE_KEYS.PARENTING_CHECKLIST, []);
+};
+
+// New storage functions for enhanced features
+export const saveMoodEntries = (entries: MoodEntry[]): void => {
+  saveToStorage(STORAGE_KEYS.MOOD_TRACKING, entries);
+};
+
+export const loadMoodEntries = (): MoodEntry[] => {
+  return loadFromStorage(STORAGE_KEYS.MOOD_TRACKING, []);
+};
+
+export const saveTimelineItems = (items: TimelineItem[]): void => {
+  saveToStorage(STORAGE_KEYS.TIMELINE_DATA, items);
+};
+
+export const loadTimelineItems = (): TimelineItem[] => {
+  return loadFromStorage(STORAGE_KEYS.TIMELINE_DATA, []);
+};
+
+export const saveDashboardData = (data: DashboardData): void => {
+  saveToStorage(STORAGE_KEYS.DASHBOARD_DATA, data);
+};
+
+export const loadDashboardData = (): DashboardData => {
+  return loadFromStorage(STORAGE_KEYS.DASHBOARD_DATA, {
+    lastUpdated: '',
+    sectionsCompleted: [],
+    totalProgress: 0,
+    urgentTasks: 0,
+    upcomingDeadlines: 0,
+  });
+};
+
+export const saveFinancialGoals = (goals: FinancialGoal[]): void => {
+  saveToStorage(STORAGE_KEYS.FINANCIAL_GOALS, goals);
+};
+
+export const loadFinancialGoals = (): FinancialGoal[] => {
+  return loadFromStorage(STORAGE_KEYS.FINANCIAL_GOALS, []);
 };

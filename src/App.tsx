@@ -11,6 +11,8 @@ import Children from './components/sections/Children';
 import LocalSupport from './components/sections/LocalSupport';
 import Resources from './components/sections/Resources';
 import Resilience from './components/sections/Resilience';
+import Dashboard from './components/sections/Dashboard';
+import Timeline from './components/sections/Timeline';
 
 function App() {
   const [currentSection, setCurrentSection] = useState('welcome');
@@ -32,6 +34,8 @@ function App() {
     switch (currentSection) {
       case 'welcome':
         return <Welcome />;
+      case 'dashboard':
+        return <Dashboard />;
       case 'checking-in':
         return <CheckingIn />;
       case 'understanding-money':
@@ -40,6 +44,8 @@ function App() {
         return <LegalPaths />;
       case 'children':
         return <Children />;
+      case 'timeline':
+        return <Timeline />;
       case 'local-support':
         return <LocalSupport />;
       case 'resources':

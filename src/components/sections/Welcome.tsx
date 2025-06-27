@@ -7,11 +7,12 @@ const Welcome: React.FC = () => {
       {/* Header */}
       <div className="text-center space-y-4">
         <h1 className="text-3xl font-semibold text-calm-800 leading-tight">
-          Welcome to your clarity and confidence tool
+          Your Personal Divorce Planning Resource
         </h1>
         <p className="text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed">
-          You're taking an important step by being here. This tool is designed to support you 
-          as you navigate separation with greater clarity and confidence.
+          This tool was created specifically to help you navigate this transition 
+          with greater clarity and confidence. Take your time, work at your own pace, 
+          and remember that you have support.
         </p>
       </div>
 
@@ -41,11 +42,11 @@ const Welcome: React.FC = () => {
             <div className="p-2 bg-calm-100 rounded-lg">
               <Heart className="text-calm-600" size={24} />
             </div>
-            <h2 className="text-xl font-medium text-calm-800">You're not alone</h2>
+            <h2 className="text-xl font-medium text-calm-800">Support and guidance</h2>
           </div>
           <div className="space-y-3 text-calm-700">
-            <p>Navigating separation is challenging, and it's normal to feel overwhelmed. This tool provides gentle guidance for your unique situation.</p>
-            <p>Take your time. You can work through sections in any order that feels right for you.</p>
+            <p>Navigating separation involves many complex decisions. This tool provides structured guidance to help you work through important considerations.</p>
+            <p>Work through sections in whatever order makes sense for your situation.</p>
             <p>Remember: this tool provides general information and is not a substitute for legal advice from a qualified attorney.</p>
           </div>
         </div>
@@ -72,31 +73,30 @@ const Welcome: React.FC = () => {
         <h2 className="text-2xl font-medium text-slate-800">How to use this tool</h2>
         <div className="grid md:grid-cols-2 gap-4">
           <div className="bg-white border border-slate-200 rounded-lg p-4">
-            <h3 className="font-medium text-slate-800 mb-2">Navigate at your own pace</h3>
+            <h3 className="font-medium text-slate-800 mb-2">Work at your own pace</h3>
             <p className="text-slate-600 text-sm leading-relaxed">
-              Use the sidebar to move between sections. You don't need to complete them in order - 
-              focus on what feels most important to you right now.
+              Use the sidebar to move between sections. Complete them in whatever order 
+              makes sense for your situation.
             </p>
           </div>
           <div className="bg-white border border-slate-200 rounded-lg p-4">
             <h3 className="font-medium text-slate-800 mb-2">Your information is saved</h3>
             <p className="text-slate-600 text-sm leading-relaxed">
-              As you fill out forms and calculators, your information is automatically saved to your 
-              device so you can come back to it later.
+              Information you enter is automatically saved to your device so you can 
+              return to it later.
             </p>
           </div>
           <div className="bg-white border border-slate-200 rounded-lg p-4">
-            <h3 className="font-medium text-slate-800 mb-2">Take breaks when needed</h3>
+            <h3 className="font-medium text-slate-800 mb-2">Take breaks as needed</h3>
             <p className="text-slate-600 text-sm leading-relaxed">
-              This is a lot to process. It's perfectly okay to step away and return when you're ready. 
-              Your progress will be waiting for you.
+              You can step away and return anytime. Your progress will be saved.
             </p>
           </div>
           <div className="bg-white border border-slate-200 rounded-lg p-4">
-            <h3 className="font-medium text-slate-800 mb-2">Get professional support</h3>
+            <h3 className="font-medium text-slate-800 mb-2">Professional support</h3>
             <p className="text-slate-600 text-sm leading-relaxed">
-              Check the "Finding local support" section for counselors, mediators, and legal aid 
-              resources specifically available in Hamilton County.
+              The "Finding local support" section includes counselors, mediators, and legal aid 
+              resources available in Hamilton County.
             </p>
           </div>
         </div>
@@ -105,11 +105,26 @@ const Welcome: React.FC = () => {
       {/* Getting Started */}
       <div className="text-center pt-6">
         <p className="text-slate-600 mb-4">
-          When you're ready, choose a section from the sidebar to begin.
+          Choose a section from the sidebar to begin.
         </p>
         <p className="text-sm text-slate-500">
-          Many people find it helpful to start with "Checking in" to reflect on where they are right now.
+          Many people start with "Checking in" to assess their current situation.
         </p>
+      </div>
+
+      {/* Personal Privacy Reminder */}
+      <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mt-6">
+        <div className="flex items-start gap-3">
+          <Shield className="text-blue-600 mt-1 flex-shrink-0" size={20} />
+          <div className="space-y-2">
+            <h3 className="font-medium text-blue-800">Your Personal Space</h3>
+            <p className="text-blue-700 leading-relaxed text-sm">
+              This tool was created specifically for you. All your information stays completely 
+              private on your device. You can bookmark this page and return anytime. 
+              Consider using a private/incognito browser if you're on a shared computer.
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   );
