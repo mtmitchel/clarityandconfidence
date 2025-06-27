@@ -3,7 +3,7 @@
   "private": false,
   "version": "1.0.0",
   "type": "module",
-  "homepage": "https://yourusername.github.io/clarity-and-confidence",
+  "homepage": "https://mtmitchel.github.io/clarityandconfidence",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
