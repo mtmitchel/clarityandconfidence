@@ -143,26 +143,30 @@ export function exportData(format: ExportFormat) {
   const timestamp = new Date().toISOString().slice(0, 10);
   
   switch (format) {
-    case 'attorney-pdf':
+    case 'attorney-pdf': {
       const attorneyContent = formatForAttorney(data);
       downloadData(attorneyContent, `case-summary-${timestamp}.txt`, 'text/plain');
       break;
+    }
       
-    case 'mediation-csv':
+    case 'mediation-csv': {
       // Simple CSV for now - could be enhanced
       const csvContent = formatAsCSV(data);
       downloadData(csvContent, `mediation-data-${timestamp}.csv`, 'text/csv');
       break;
+    }
       
-    case 'personal-json':
+    case 'personal-json': {
       const jsonContent = JSON.stringify(data, null, 2);
       downloadData(jsonContent, `backup-${timestamp}.json`, 'application/json');
       break;
+    }
       
-    case 'court-summary':
+    case 'court-summary': {
       const courtContent = formatForCourt(data);
       downloadData(courtContent, `court-summary-${timestamp}.txt`, 'text/plain');
       break;
+    }
   }
 }
 

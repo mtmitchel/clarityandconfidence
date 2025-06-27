@@ -36,7 +36,7 @@ const Dashboard: React.FC = () => {
 
     // Calculate section completion
     const sectionsCompleted: string[] = [];
-    let totalSections = 4; // Total sections to track
+    const totalSections = 4; // Total sections to track
 
     if (assets.length > 0) sectionsCompleted.push('understanding-money');
     if (legalPath.recommendation) sectionsCompleted.push('legal-paths');
