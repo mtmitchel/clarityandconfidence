@@ -23,6 +23,7 @@ export interface OhioChildSupportInputs {
   overnightsWithParent2: number;
   healthInsuranceCost?: number;
   childCareCost?: number;
+  educationalExpenses?: number; // Annual extraordinary educational expenses
 }
 
 export interface OhioChildSupportResult {
@@ -83,6 +84,8 @@ export function calculateOhioChildSupport(inputs: OhioChildSupportInputs): OhioC
   if (combinedGrossIncome > 300000) {
     warnings.push('Combined income exceeds typical guidelines maximum. Court may deviate from standard calculations.');
   }
+
+  warnings.push('This calculator does not include all possible deviation factors a court may consider (e.g., special needs of a child, extraordinary travel costs for parenting time).');
   
   // Get base support percentage
   const childCount = Math.min(inputs.numberOfChildren, 6);
@@ -119,6 +122,9 @@ export function calculateOhioChildSupport(inputs: OhioChildSupportInputs): OhioC
   }
   if (inputs.childCareCost) {
     totalSupport += Math.round((inputs.childCareCost * nonResidentialIncomePercent) / 12);
+  }
+  if (inputs.educationalExpenses) {
+    totalSupport += Math.round((inputs.educationalExpenses * nonResidentialIncomePercent) / 12);
   }
   
   // Ensure minimum support

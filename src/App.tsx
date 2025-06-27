@@ -4,12 +4,30 @@ import QuickEscape from './components/QuickEscape';
 
 // Import all section components
 import Welcome from './components/sections/Welcome';
+import Dashboard from './components/sections/Dashboard';
+import InitialAssessment from './components/sections/InitialAssessment';
+import ChildSupportCalculator from './components/sections/ChildSupportCalculator';
+import DocumentChecklist from './components/sections/DocumentChecklist';
+import DeadlineCalculator from './components/sections/DeadlineCalculator';
 import UnderstandingMoney from './components/sections/UnderstandingMoney';
 import LegalPaths from './components/sections/LegalPaths';
-import Children from './components/sections/Children';
+import EnhancedTimeline from './components/sections/EnhancedTimeline';
+import CommunicationLog from './components/sections/CommunicationLog';
+import ExpenseTracker from './components/sections/ExpenseTracker';
 import Resilience from './components/sections/Resilience';
-import Timeline from './components/sections/Timeline';
-import Resources from './components/sections/Resources';
+import LifeAfterDivorce from './components/sections/LifeAfterDivorce';
+import ResourceLibrary from './components/sections/ResourceLibrary';
+import SpousalSupportCalculator from './components/sections/SpousalSupportCalculator';
+import AssetDivisionTool from './components/sections/AssetDivisionTool';
+import SettlementComparison from './components/sections/SettlementComparison';
+import PostDivorceBudget from './components/sections/PostDivorceBudget';
+import LegalFeeEstimator from './components/sections/LegalFeeEstimator';
+import Children from './components/sections/Children';
+import EmotionalToolkit from './components/sections/EmotionalToolkit';
+import CoParentingCalendar from './components/sections/CoParentingCalendar';
+import OhioResourceMap from './components/sections/OhioResourceMap';
+import CommunicationTemplates from './components/sections/CommunicationTemplates';
+import LegalDecisionGuide from './components/sections/LegalDecisionGuide';
 
 function App() {
   const [currentSection, setCurrentSection] = useState('welcome');
@@ -30,27 +48,73 @@ function App() {
   const renderCurrentSection = () => {
     switch (currentSection) {
       case 'welcome':
-        return <Welcome />;
-      case 'understanding-money':
-        return <UnderstandingMoney />;
+        return <Welcome onStartAssessment={() => setCurrentSection('initial-assessment')} onNavigate={(section) => setCurrentSection(section)} />;
+      case 'dashboard':
+        return <Dashboard onNavigate={(section) => setCurrentSection(section)} />;
+      case 'initial-assessment':
+        return <InitialAssessment 
+          onComplete={(recommendations) => {
+            // Store recommendations for use on the dashboard and other sections
+            localStorage.setItem('assessment-recommendations', JSON.stringify(recommendations));
+            // We no longer navigate away automatically. The component will show its own results.
+          }}
+          onNavigate={(section) => setCurrentSection(section)}
+        />;
       case 'legal-paths':
         return <LegalPaths />;
-      case 'children':
+      case 'legal-decision-guide':
+        return <LegalDecisionGuide />;
+      case 'understanding-money':
+        return <UnderstandingMoney />;
+      case 'child-support-calculator':
+        return <ChildSupportCalculator />;
+      case 'spousal-support-calculator':
+        return <SpousalSupportCalculator />;
+      case 'asset-division-tool':
+        return <AssetDivisionTool />;
+      case 'settlement-comparison':
+        return <SettlementComparison />;
+      case 'post-divorce-budget':
+        return <PostDivorceBudget />;
+      case 'enhanced-timeline':
+        return <EnhancedTimeline />;
+      case 'document-checklist':
+        return <DocumentChecklist />;
+      case 'deadline-calculator':
+        return <DeadlineCalculator />;
+      case 'communication-log':
+        return <CommunicationLog />;
+      case 'expense-tracker':
+        return <ExpenseTracker />;
+      case 'legal-fee-estimator':
+        return <LegalFeeEstimator />;
+      case 'children-custody':
         return <Children />;
-      case 'timeline':
-        return <Timeline />;
+      case 'co-parenting-calendar':
+        return <CoParentingCalendar />;
+      case 'communication-templates':
+        return <CommunicationTemplates />;
+      case 'emotional-toolkit':
+        return <EmotionalToolkit />;
+      case 'life-after-divorce':
+        return <LifeAfterDivorce />;
       case 'resources':
-        return <Resources />;
-      case 'resilience':
-        return <Resilience />;
+        return <ResourceLibrary />;
+      case 'ohio-resource-map':
+        return <OhioResourceMap />;
+      case 'learning-resources':
+        return <ResourceLibrary />;
+      case 'citations':
+        return <ResourceLibrary />;
       default:
-        return <Welcome />;
+        return <Welcome onStartAssessment={() => setCurrentSection('initial-assessment')} onNavigate={(section) => setCurrentSection(section)} />;
     }
   };
 
   const handleSectionChange = (section: string) => {
     setCurrentSection(section);
     setIsMobileMenuOpen(false); // Close mobile menu when section changes
+    window.scrollTo(0, 0); // Ensure view is at the top
   };
 
   return (

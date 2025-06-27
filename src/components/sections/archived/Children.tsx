@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Baby, Calendar, Clock, Home, Users, MapPin, Phone, BookOpen, ExternalLink, Calculator } from 'lucide-react';
 
-interface ParentingSchedule {
+interface CustodySchedule {
   name: string;
   description: string;
   weeklyPattern: string[];
@@ -29,7 +29,7 @@ const Children: React.FC = () => {
   const [selectedAgeGroup, setSelectedAgeGroup] = useState<string>('school-age');
   const [showCommunicationTips, setShowCommunicationTips] = useState<string | null>(null);
 
-  const parentingSchedules: { [key: string]: ParentingSchedule } = {
+  const custodySchedules: { [key: string]: CustodySchedule } = {
     'alternating-weeks': {
       name: 'Alternating Weeks',
       description: 'Children spend one full week with each parent, alternating weekly',
@@ -51,8 +51,8 @@ const Children: React.FC = () => {
       ageRange: 'Best for school-age and older children',
       details: {
         pickupDropoff: 'Sunday evening or Monday morning for school transitions',
-        schoolNights: 'All school nights with residential parent that week',
-        extracurriculars: 'Residential parent handles registration and transportation'
+        schoolNights: 'All school nights with custodial parent that week',
+        extracurriculars: 'Custodial parent handles registration and transportation'
       }
     },
     'alternating-weekends': {
@@ -94,7 +94,7 @@ const Children: React.FC = () => {
         'One weeknight dinner visit optional'
       ],
       holidays: 'Split major holidays, some traditions maintained',
-      summer: 'Extended parenting time periods (2-4 weeks)',
+      summer: 'Extended visitation periods (2-4 weeks)',
       pros: [
         'Stable primary residence for children',
         'Less disruptive to school routines',
@@ -102,7 +102,7 @@ const Children: React.FC = () => {
         'Works when parents live far apart'
       ],
       cons: [
-        'Limited time with non-residential parent',
+        'Limited time with non-custodial parent',
         'May feel like visiting vs. living',
         'Burden on primary parent',
         'Weekend parent may feel disconnected'
@@ -110,8 +110,8 @@ const Children: React.FC = () => {
       ageRange: 'Suitable for all ages, traditional approach',
       details: {
         pickupDropoff: 'Friday after school, Sunday evening return',
-        schoolNights: 'Primarily with residential parent',
-        extracurriculars: 'Residential parent coordinates, other parent informed'
+        schoolNights: 'Primarily with custodial parent',
+        extracurriculars: 'Custodial parent coordinates, other parent informed'
       }
     },
     'nested': {
@@ -255,16 +255,16 @@ const Children: React.FC = () => {
     }
   ];
 
-  const currentSchedule = parentingSchedules[selectedSchedule];
+  const currentSchedule = custodySchedules[selectedSchedule];
   const currentAgeGroup = ageGroupConsiderations[selectedAgeGroup];
 
   return (
     <div className="max-w-6xl mx-auto p-8 space-y-12">
       {/* Header */}
       <div className="text-center space-y-6">
-        <h1 className="text-4xl font-light text-sage-900">Parenting plan & schedule builder</h1>
+        <h1 className="text-4xl font-light text-sage-900">Custody arrangement planner</h1>
         <p className="text-xl text-neutral-700 max-w-4xl mx-auto leading-relaxed">
-          Interactive tools to explore parenting time schedules, communication strategies, and 
+          Interactive tools to explore custody schedules, communication strategies, and 
           age-appropriate arrangements that prioritize your children's wellbeing.
         </p>
       </div>
@@ -304,9 +304,9 @@ const Children: React.FC = () => {
 
       {/* Custody Schedule Selector */}
       <div className="space-y-6">
-        <h2 className="text-2xl font-semibold text-neutral-800 text-center">Parenting time schedule options</h2>
+        <h2 className="text-2xl font-semibold text-neutral-800 text-center">Custody schedule options</h2>
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {Object.entries(parentingSchedules).map(([key, schedule]) => (
+          {Object.entries(custodySchedules).map(([key, schedule]) => (
             <button
               key={key}
               onClick={() => setSelectedSchedule(key)}
@@ -444,7 +444,7 @@ const Children: React.FC = () => {
 
       {/* Ohio Resources */}
       <div className="space-y-6">
-        <h2 className="text-2xl font-semibold text-neutral-800 text-center">Ohio parenting time resources</h2>
+        <h2 className="text-2xl font-semibold text-neutral-800 text-center">Ohio custody resources</h2>
         <div className="grid md:grid-cols-2 gap-6">
           {ohioResources.map((resource, index) => (
             <div key={index} className="bg-white border border-neutral-200 rounded-xl p-6">

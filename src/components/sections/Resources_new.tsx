@@ -38,7 +38,7 @@ const Resources: React.FC = () => {
         },
         {
           title: "Legal Aid Society of Greater Cincinnati",
-          description: "Free or reduced-fee legal representation for qualifying individuals in divorce, parenting time, and domestic violence cases",
+          description: "Free or reduced-fee legal representation for qualifying individuals in divorce, custody, and domestic violence cases",
           source: "Legal Aid Society of Southwest Ohio (2024)",
           link: "https://www.lasco.org",
           priority: "high",

@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import { Calendar, Clock, DollarSign, FileText, Scale, Users, CheckCircle2, AlertCircle } from 'lucide-react';
+import { Calendar, Clock, DollarSign, FileText, Scale, Users, CheckCircle2, AlertCircle, Plus } from 'lucide-react';
+import { divorceScenarios, calculateProjectedDates, TimelineProgress } from '../../data/timeline';
+import { useLocalStorageState } from '../../hooks/useLocalStorageState';
 
 interface TimelinePhase {
   phase: string;
@@ -27,6 +29,37 @@ interface DivorceScenario {
 const Timeline: React.FC = () => {
   const [selectedScenario, setSelectedScenario] = useState<string>('uncontested');
   const [selectedPhase, setSelectedPhase] = useState<number | null>(null);
+  const [progress, setProgress] = useLocalStorageState<TimelineProgress>('timeline-progress', {
+    scenarioType: 'uncontested',
+    completedPhases: [],
+    completedTasks: []
+  });
+  const [startDate, setStartDate] = useLocalStorageState<string>('timeline-start-date', '');
+
+  const currentScenario = divorceScenarios.find(s => s.type === selectedScenario);
+  const projectedDates = startDate && currentScenario ? calculateProjectedDates(startDate, currentScenario) : {};
+
+  const toggleTaskCompletion = (taskId: string) => {
+    const updatedTasks = progress.completedTasks.includes(taskId)
+      ? progress.completedTasks.filter(id => id !== taskId)
+      : [...progress.completedTasks, taskId];
+    
+    setProgress({
+      ...progress,
+      completedTasks: updatedTasks
+    });
+  };
+
+  const togglePhaseCompletion = (phaseId: string) => {
+    const updatedPhases = progress.completedPhases.includes(phaseId)
+      ? progress.completedPhases.filter(id => id !== phaseId)
+      : [...progress.completedPhases, phaseId];
+    
+    setProgress({
+      ...progress,
+      completedPhases: updatedPhases
+    });
+  };
 
   const divorceScenarios: DivorceScenario[] = [
     {
@@ -248,7 +281,7 @@ const Timeline: React.FC = () => {
     }
   ];
 
-  const currentScenario = divorceScenarios.find(s => s.type === selectedScenario)!;
+  const selectedScenarioData = divorceScenarios.find(s => s.type === selectedScenario)!;
 
   const getTotalCostRange = (scenario: DivorceScenario) => {
     const low = scenario.phases.reduce((sum, phase) => sum + phase.estimatedCosts.low, 0);
@@ -316,14 +349,14 @@ const Timeline: React.FC = () => {
       {/* Selected Scenario Details */}
       <div className="space-y-8">
         <div className="bg-sage-50 border border-sage-200 rounded-xl p-8">
-          <h2 className="text-3xl font-semibold text-sage-900 mb-4">{currentScenario.title}</h2>
-          <p className="text-lg text-sage-800 mb-6 leading-relaxed">{currentScenario.description}</p>
+          <h2 className="text-3xl font-semibold text-sage-900 mb-4">{selectedScenarioData.title}</h2>
+          <p className="text-lg text-sage-800 mb-6 leading-relaxed">{selectedScenarioData.description}</p>
           
           <div className="grid md:grid-cols-2 gap-8">
             <div>
               <h3 className="text-lg font-semibold text-sage-800 mb-3">Advantages</h3>
               <ul className="space-y-2">
-                {currentScenario.pros.map((pro, index) => (
+                {selectedScenarioData.pros.map((pro, index) => (
                   <li key={index} className="flex items-start gap-2 text-sage-700">
                     <CheckCircle2 size={16} className="text-green-600 mt-0.5 flex-shrink-0" />
                     <span className="text-sm">{pro}</span>
@@ -334,7 +367,7 @@ const Timeline: React.FC = () => {
             <div>
               <h3 className="text-lg font-semibold text-sage-800 mb-3">Considerations</h3>
               <ul className="space-y-2">
-                {currentScenario.cons.map((con, index) => (
+                {selectedScenarioData.cons.map((con, index) => (
                   <li key={index} className="flex items-start gap-2 text-sage-700">
                     <AlertCircle size={16} className="text-orange-600 mt-0.5 flex-shrink-0" />
                     <span className="text-sm">{con}</span>
@@ -349,7 +382,7 @@ const Timeline: React.FC = () => {
         <div className="space-y-6">
           <h2 className="text-2xl font-semibold text-neutral-800 text-center">Process timeline</h2>
           <div className="space-y-4">
-            {currentScenario.phases.map((phase, index) => (
+            {selectedScenarioData.phases.map((phase, index) => (
               <div
                 key={index}
                 className="bg-white border border-neutral-200 rounded-xl overflow-hidden"
@@ -440,19 +473,19 @@ const Timeline: React.FC = () => {
           <div className="grid grid-cols-3 gap-6">
             <div className="text-center">
               <div className="text-2xl font-bold text-green-800">
-                {formatCurrency(getTotalCostRange(currentScenario).low)}
+                {formatCurrency(getTotalCostRange(selectedScenarioData).low)}
               </div>
               <div className="text-sm text-green-700">Minimum</div>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-green-800">
-                {formatCurrency(getTotalCostRange(currentScenario).average)}
+                {formatCurrency(getTotalCostRange(selectedScenarioData).average)}
               </div>
               <div className="text-sm text-green-700">Average</div>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-green-800">
-                {formatCurrency(getTotalCostRange(currentScenario).high)}
+                {formatCurrency(getTotalCostRange(selectedScenarioData).high)}
               </div>
               <div className="text-sm text-green-700">Maximum</div>
             </div>

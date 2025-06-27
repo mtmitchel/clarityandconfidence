@@ -25,7 +25,7 @@ const QuickEscape: React.FC = () => {
       aria-label="Quick escape - leaves this site immediately"
     >
       <AlertTriangle size={18} />
-      Quick Escape
+      Quick escape {/* updated to sentence case */}
     </button>
   );
 };

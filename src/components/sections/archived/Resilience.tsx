@@ -174,38 +174,11 @@ const Resilience: React.FC = () => {
     <div className="max-w-6xl mx-auto p-8 space-y-12">
       {/* Header */}
       <div className="text-center space-y-6">
-        <h1 className="text-4xl font-light text-sage-900">Emotional support toolkit</h1>
+        <h1 className="text-4xl font-light text-sage-900">Building resilience</h1>
         <p className="text-xl text-neutral-700 max-w-4xl mx-auto leading-relaxed">
-          Practical resources and professional support for your emotional wellbeing during this challenging time
+          Evidence-based mental health resources, professional support networks, and self-assessment tools 
+          to support your emotional wellbeing during divorce proceedings
         </p>
-      </div>
-
-      {/* Immediate Support Section */}
-      <div className="bg-red-50 border border-red-200 rounded-xl p-8">
-        <h2 className="text-2xl font-semibold text-red-900 mb-6 text-center">Need help right now?</h2>
-        <div className="grid md:grid-cols-3 gap-6">
-          <div className="text-center">
-            <Phone className="text-red-600 mx-auto mb-3" size={32} />
-            <h3 className="font-semibold text-red-800 mb-2">Crisis Support</h3>
-            <p className="text-red-700 mb-2">24/7 confidential help</p>
-            <p className="font-mono text-xl text-red-800">988</p>
-            <p className="text-sm text-red-600">National Suicide Prevention Lifeline</p>
-          </div>
-          <div className="text-center">
-            <Heart className="text-red-600 mx-auto mb-3" size={32} />
-            <h3 className="font-semibold text-red-800 mb-2">Domestic Violence</h3>
-            <p className="text-red-700 mb-2">24/7 support and resources</p>
-            <p className="font-mono text-xl text-red-800">1-800-799-7233</p>
-            <p className="text-sm text-red-600">National Domestic Violence Hotline</p>
-          </div>
-          <div className="text-center">
-            <Users className="text-red-600 mx-auto mb-3" size={32} />
-            <h3 className="font-semibold text-red-800 mb-2">Text Support</h3>
-            <p className="text-red-700 mb-2">Text with a counselor</p>
-            <p className="font-mono text-xl text-red-800">741741</p>
-            <p className="text-sm text-red-600">Text HOME to Crisis Text Line</p>
-          </div>
-        </div>
       </div>
 
       {/* Self-Assessment Tool */}
