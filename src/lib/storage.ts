@@ -2,13 +2,12 @@
 // All data stays on the user's device only
 
 export const STORAGE_KEYS = {
-  JOURNAL_ENTRY: 'clarity_tool_journal',
+  CASE_LOG: 'clarity_tool_case_log',
   ASSETS_DEBTS: 'clarity_tool_assets_debts',
   CHILD_SUPPORT: 'clarity_tool_child_support',
   LEGAL_PATH: 'clarity_tool_legal_path',
   PARENTING_CHECKLIST: 'clarity_tool_parenting_checklist',
   USER_PREFERENCES: 'clarity_tool_preferences',
-  MOOD_TRACKING: 'clarity_tool_mood_tracking',
   DASHBOARD_DATA: 'clarity_tool_dashboard',
   TIMELINE_DATA: 'clarity_tool_timeline',
   FINANCIAL_GOALS: 'clarity_tool_financial_goals',
@@ -173,21 +172,6 @@ export const importAllData = (jsonData: string): boolean => {
 };
 
 // Specific storage functions
-export const saveJournalEntry = (content: string): void => {
-  const entry: JournalEntry = {
-    content,
-    lastUpdated: new Date().toISOString(),
-  };
-  saveToStorage(STORAGE_KEYS.JOURNAL_ENTRY, entry);
-};
-
-export const loadJournalEntry = (): JournalEntry => {
-  return loadFromStorage(STORAGE_KEYS.JOURNAL_ENTRY, {
-    content: '',
-    lastUpdated: '',
-  });
-};
-
 export const saveAssetDebtList = (items: AssetDebtItem[]): void => {
   saveToStorage(STORAGE_KEYS.ASSETS_DEBTS, items);
 };
@@ -231,15 +215,6 @@ export const saveParentingChecklist = (items: ParentingChecklistItem[]): void =>
 
 export const loadParentingChecklist = (): ParentingChecklistItem[] => {
   return loadFromStorage(STORAGE_KEYS.PARENTING_CHECKLIST, []);
-};
-
-// New storage functions for enhanced features
-export const saveMoodEntries = (entries: MoodEntry[]): void => {
-  saveToStorage(STORAGE_KEYS.MOOD_TRACKING, entries);
-};
-
-export const loadMoodEntries = (): MoodEntry[] => {
-  return loadFromStorage(STORAGE_KEYS.MOOD_TRACKING, []);
 };
 
 export const saveTimelineItems = (items: TimelineItem[]): void => {

@@ -4,15 +4,14 @@ import QuickEscape from './components/QuickEscape';
 
 // Import all section components
 import Welcome from './components/sections/Welcome';
-import CheckingIn from './components/sections/CheckingIn';
 import UnderstandingMoney from './components/sections/UnderstandingMoney';
 import LegalPaths from './components/sections/LegalPaths';
 import Children from './components/sections/Children';
-import LocalSupport from './components/sections/LocalSupport';
-import Resources from './components/sections/Resources';
 import Resilience from './components/sections/Resilience';
-import Dashboard from './components/sections/Dashboard';
 import Timeline from './components/sections/Timeline';
+
+// Import Resources separately to avoid potential import issues
+import Resources from './components/sections/Resources';
 
 function App() {
   const [currentSection, setCurrentSection] = useState('welcome');
@@ -34,10 +33,6 @@ function App() {
     switch (currentSection) {
       case 'welcome':
         return <Welcome />;
-      case 'dashboard':
-        return <Dashboard />;
-      case 'checking-in':
-        return <CheckingIn />;
       case 'understanding-money':
         return <UnderstandingMoney />;
       case 'legal-paths':
@@ -46,8 +41,6 @@ function App() {
         return <Children />;
       case 'timeline':
         return <Timeline />;
-      case 'local-support':
-        return <LocalSupport />;
       case 'resources':
         return <Resources />;
       case 'resilience':
@@ -63,14 +56,14 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 flex">
+    <div className="min-h-screen bg-neutral-50 flex">
       {/* Quick Escape Button - Always visible */}
       <QuickEscape />
 
       {/* Mobile Menu Button */}
       <button
         onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-        className="lg:hidden fixed top-4 left-4 z-40 p-2 bg-calm-600 text-white rounded-lg shadow-lg"
+        className="lg:hidden fixed top-4 left-4 z-40 p-2 bg-sage-600 text-white rounded-lg shadow-lg hover:bg-sage-700 transition-colors"
         aria-label="Toggle navigation menu"
       >
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">

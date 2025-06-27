@@ -1,0 +1,9 @@
+{
+  "*.{ts,tsx}": [
+    "eslint --fix",
+    "pnpm run test:run"
+  ],
+  "*.md": [
+    "markdownlint --fix"
+  ]
+}

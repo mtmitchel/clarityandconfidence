@@ -1,9 +1,20 @@
 import React from 'react';
 import { AlertTriangle } from 'lucide-react';
+import { STORAGE_KEYS } from '../lib/storage';
 
 const QuickEscape: React.FC = () => {
   const handleQuickEscape = () => {
-    // Clear any local storage data and redirect to Google
+    // Clear ALL application data from localStorage
+    Object.values(STORAGE_KEYS).forEach(key => {
+      localStorage.removeItem(key);
+    });
+    
+    // Clear browser history to remove traces
+    if (window.history.replaceState) {
+      window.history.replaceState(null, '', 'https://www.google.com');
+    }
+    
+    // Redirect to Google
     window.location.href = 'https://www.google.com';
   };
 

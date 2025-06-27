@@ -1,298 +1,489 @@
-import React, { useState, useEffect } from 'react';
-import { Baby, Check, Trash2, MessageCircle } from 'lucide-react';
-import { 
-  saveParentingChecklist, 
-  loadParentingChecklist, 
-  clearStorageSection,
-  STORAGE_KEYS,
-  ParentingChecklistItem 
-} from '../../lib/storage';
+import React, { useState } from 'react';
+import { Baby, Calendar, Clock, Home, Users, MapPin, Phone, BookOpen, ExternalLink, Calculator } from 'lucide-react';
+
+interface CustodySchedule {
+  name: string;
+  description: string;
+  weeklyPattern: string[];
+  holidays: string;
+  summer: string;
+  pros: string[];
+  cons: string[];
+  ageRange: string;
+  details: {
+    pickupDropoff: string;
+    schoolNights: string;
+    extracurriculars: string;
+  };
+}
+
+interface CommunicationStrategy {
+  scenario: string;
+  strategy: string;
+  tips: string[];
+  example: string;
+}
 
 const Children: React.FC = () => {
-  const [checklistItems, setChecklistItems] = useState<ParentingChecklistItem[]>([]);
-  const [showClearConfirm, setShowClearConfirm] = useState(false);
-  const [expandedNotes, setExpandedNotes] = useState<string | null>(null);
+  const [selectedSchedule, setSelectedSchedule] = useState<string>('alternating-weeks');
+  const [selectedAgeGroup, setSelectedAgeGroup] = useState<string>('school-age');
+  const [showCommunicationTips, setShowCommunicationTips] = useState<string | null>(null);
 
-  // Default checklist items organized by category
-  const defaultChecklist: Omit<ParentingChecklistItem, 'id' | 'completed' | 'notes'>[] = [
-    // Decision-Making Authority
-    { category: 'Decision-Making Authority', item: 'Educational decisions and school choice' },
-    { category: 'Decision-Making Authority', item: 'Medical and healthcare decisions' },
-    { category: 'Decision-Making Authority', item: 'Religious upbringing and activities' },
-    { category: 'Decision-Making Authority', item: 'Extracurricular activities and sports' },
-    { category: 'Decision-Making Authority', item: 'Mental health and counseling' },
-    { category: 'Decision-Making Authority', item: 'Travel and passport decisions' },
+  const custodySchedules: { [key: string]: CustodySchedule } = {
+    'alternating-weeks': {
+      name: 'Alternating Weeks',
+      description: 'Children spend one full week with each parent, alternating weekly',
+      weeklyPattern: ['Week 1: Parent A', 'Week 2: Parent B', 'Repeat pattern'],
+      holidays: 'Alternate major holidays yearly or split holiday periods',
+      summer: 'Continue weekly alternation or divide into longer blocks',
+      pros: [
+        'Minimal transitions for children',
+        'Each parent gets extended time',
+        'Simpler schedule to follow',
+        'Good for long-distance arrangements'
+      ],
+      cons: [
+        'Long periods without seeing other parent',
+        'May be difficult for younger children',
+        'Requires good communication for activities',
+        'School/activity consistency challenges'
+      ],
+      ageRange: 'Best for school-age and older children',
+      details: {
+        pickupDropoff: 'Sunday evening or Monday morning for school transitions',
+        schoolNights: 'All school nights with custodial parent that week',
+        extracurriculars: 'Custodial parent handles registration and transportation'
+      }
+    },
+    'alternating-weekends': {
+      name: '2-2-3 Schedule',
+      description: 'Children alternate between parents on a 2-2-3 day rotation',
+      weeklyPattern: [
+        'Mon-Tue: Parent A',
+        'Wed-Thu: Parent B', 
+        'Fri-Sun: Parent A',
+        'Next week flips pattern'
+      ],
+      holidays: 'Holiday schedule takes precedence over regular rotation',
+      summer: 'May extend to week-long blocks during school break',
+      pros: [
+        'More frequent contact with both parents',
+        'No more than 3 days away from either parent',
+        'Flexible and responsive to child needs',
+        'Both parents involved in school week'
+      ],
+      cons: [
+        'More transitions for children',
+        'Complex schedule to track',
+        'Requires excellent co-parent communication',
+        'May be disruptive to routines'
+      ],
+      ageRange: 'Works well for all ages, especially younger children',
+      details: {
+        pickupDropoff: 'Usually after school/work or evening',
+        schoolNights: 'Shared between both parents',
+        extracurriculars: 'Both parents coordinate activities'
+      }
+    },
+    'traditional': {
+      name: 'Traditional Schedule',
+      description: 'Children live primarily with one parent, visit other parent alternating weekends',
+      weeklyPattern: [
+        'Mon-Thu: Primary parent',
+        'Fri-Sun: Other parent (alternating weekends)',
+        'One weeknight dinner visit optional'
+      ],
+      holidays: 'Split major holidays, some traditions maintained',
+      summer: 'Extended visitation periods (2-4 weeks)',
+      pros: [
+        'Stable primary residence for children',
+        'Less disruptive to school routines',
+        'Clear structure and expectations',
+        'Works when parents live far apart'
+      ],
+      cons: [
+        'Limited time with non-custodial parent',
+        'May feel like visiting vs. living',
+        'Burden on primary parent',
+        'Weekend parent may feel disconnected'
+      ],
+      ageRange: 'Suitable for all ages, traditional approach',
+      details: {
+        pickupDropoff: 'Friday after school, Sunday evening return',
+        schoolNights: 'Primarily with custodial parent',
+        extracurriculars: 'Custodial parent coordinates, other parent informed'
+      }
+    },
+    'nested': {
+      name: 'Nesting Arrangement',
+      description: 'Children stay in family home, parents rotate in and out',
+      weeklyPattern: [
+        'Children remain in family home',
+        'Parents alternate weeks living there',
+        'Each parent maintains separate residence'
+      ],
+      holidays: 'Parent rotation continues through holidays',
+      summer: 'May maintain arrangement or take planned vacations',
+      pros: [
+        'Maximum stability for children',
+        'Children keep same bedroom/environment',
+        'No packing/moving belongings',
+        'Easier transition initially'
+      ],
+      cons: [
+        'Expensive - maintaining 3 residences',
+        'Complex logistics for parents',
+        'Potential boundary issues',
+        'Usually temporary arrangement'
+      ],
+      ageRange: 'Beneficial for younger children during initial transition',
+      details: {
+        pickupDropoff: 'Parents transition, children stay put',
+        schoolNights: 'No impact on school routine',
+        extracurriculars: 'Resident parent handles activities'
+      }
+    }
+  };
 
-    // Parenting Schedule
-    { category: 'Parenting Schedule', item: 'Regular weekly schedule' },
-    { category: 'Parenting Schedule', item: 'Holiday and vacation schedule' },
-    { category: 'Parenting Schedule', item: 'Summer break arrangements' },
-    { category: 'Parenting Schedule', item: 'School breaks and teacher workdays' },
-    { category: 'Parenting Schedule', item: 'Birthday and special occasion arrangements' },
-    { category: 'Parenting Schedule', item: 'Transportation arrangements' },
-    { category: 'Parenting Schedule', item: 'Makeup time for missed visits' },
+  const ageGroupConsiderations = {
+    'toddler': {
+      title: 'Ages 2-4: Toddlers',
+      considerations: [
+        'Need frequent contact with both parents (no more than 2-3 days apart)',
+        'Benefit from consistent routines and familiar environments',
+        'May struggle with longer separations from primary caregiver',
+        'Transitions should be gentle and predictable',
+        'Consider shorter, more frequent visits'
+      ],
+      recommendedSchedules: ['2-2-3 Schedule', 'Modified Traditional with midweek visits']
+    },
+    'school-age': {
+      title: 'Ages 5-12: School Age',
+      considerations: [
+        'Can handle longer periods with each parent',
+        'School schedule provides structure and routine',
+        'Benefit from stability in school district',
+        'Can participate in planning their schedule',
+        'Extracurricular activities become important factor'
+      ],
+      recommendedSchedules: ['Alternating Weeks', '2-2-3 Schedule', 'Traditional']
+    },
+    'teenager': {
+      title: 'Ages 13+: Teenagers',
+      considerations: [
+        'Need input into their living arrangements',
+        'Social activities and friendships are priorities',
+        'May prefer one primary residence',
+        'School and extracurricular commitments drive schedule',
+        'Flexibility becomes more important than rigid structure'
+      ],
+      recommendedSchedules: ['Flexible arrangements based on teen input', 'Modified schedules around activities']
+    }
+  };
 
-    // Communication
-    { category: 'Communication', item: 'How parents will communicate with each other' },
-    { category: 'Communication', item: 'How children will contact the other parent' },
-    { category: 'Communication', item: 'Sharing important information about children' },
-    { category: 'Communication', item: 'Attending school events and activities' },
-    { category: 'Communication', item: 'Emergency communication procedures' },
-
-    // Daily Care and Rules
-    { category: 'Daily Care and Rules', item: 'Bedtimes and daily routines' },
-    { category: 'Daily Care and Rules', item: 'Discipline and house rules' },
-    { category: 'Daily Care and Rules', item: 'Screen time and technology use' },
-    { category: 'Daily Care and Rules', item: 'Homework and study expectations' },
-    { category: 'Daily Care and Rules', item: 'Chores and responsibilities' },
-
-    // Special Considerations
-    { category: 'Special Considerations', item: 'Introduction of new romantic partners' },
-    { category: 'Special Considerations', item: 'Childcare and babysitting arrangements' },
-    { category: 'Special Considerations', item: 'Moving or relocation procedures' },
-    { category: 'Special Considerations', item: 'Handling disagreements or disputes' },
-    { category: 'Special Considerations', item: 'Review and modification process' },
+  const communicationStrategies: CommunicationStrategy[] = [
+    {
+      scenario: 'Sharing school information',
+      strategy: 'Use shared digital tools and maintain open communication',
+      tips: [
+        'Both parents on school email lists and emergency contacts',
+        'Share school portal login information',
+        'Attend school events together when possible',
+        'Create shared calendar for school activities'
+      ],
+      example: 'Use apps like OurFamilyWizard or shared Google Calendar for school events'
+    },
+    {
+      scenario: 'Managing different house rules',
+      strategy: 'Agree on core values while allowing some flexibility',
+      tips: [
+        'Align on major rules (bedtime, homework, screen time)',
+        'Allow each parent some autonomy in their home',
+        'Communicate rule changes that affect the other household',
+        'Focus on consistency in values, not identical rules'
+      ],
+      example: 'Both homes require homework completion before screen time, but bedtime may vary by 30 minutes'
+    },
+    {
+      scenario: 'Handling medical appointments',
+      strategy: 'Establish clear protocol for healthcare decisions',
+      tips: [
+        'Share access to children\'s medical records',
+        'Inform other parent of all appointments and outcomes',
+        'Both parents authorized to make emergency medical decisions',
+        'Coordinate routine care to avoid duplication'
+      ],
+      example: 'Annual physicals scheduled during one parent\'s time, both parents informed of results'
+    },
+    {
+      scenario: 'Introducing new partners',
+      strategy: 'Take gradual approach with advance communication',
+      tips: [
+        'Wait until relationship is stable before introduction',
+        'Inform other parent before introduction',
+        'Start with brief, casual meetings',
+        'Respect children\'s timeline for acceptance'
+      ],
+      example: 'Six-month relationship minimum before introduction, casual group activity for first meeting'
+    }
   ];
 
-  // Load saved data or initialize with default checklist
-  useEffect(() => {
-    const savedItems = loadParentingChecklist();
-    if (savedItems.length === 0) {
-      // Initialize with default checklist
-      const initialItems: ParentingChecklistItem[] = defaultChecklist.map((item, index) => ({
-        id: `default-${index}`,
-        ...item,
-        completed: false,
-        notes: '',
-      }));
-      setChecklistItems(initialItems);
-      saveParentingChecklist(initialItems);
-    } else {
-      setChecklistItems(savedItems);
+  const ohioResources = [
+    {
+      name: 'Ohio Shared Parenting Guidelines',
+      description: 'Official guidelines from Ohio Supreme Court for parenting time schedules',
+      link: 'https://www.supremecourt.ohio.gov/JCS/CFC/resources/parentingGuide/',
+      type: 'legal'
+    },
+    {
+      name: 'Hamilton County Parent Education Program',
+      description: 'Required 4-hour program for divorcing parents in Hamilton County',
+      link: 'https://www.hamiltoncountyohio.gov/family-court',
+      type: 'education'
+    },
+    {
+      name: 'Ohio Child Support Calculator',
+      description: 'Calculate child support based on custody arrangement and income',
+      link: 'https://jfs.ohio.gov/ocs/ChildSupportCalculator.stm',
+      type: 'financial'
+    },
+    {
+      name: 'OurFamilyWizard Communication Tool',
+      description: 'Court-approved co-parenting communication platform',
+      link: 'https://www.ourfamilywizard.com',
+      type: 'tool'
     }
-  }, []);
+  ];
 
-  const toggleItemCompletion = (id: string) => {
-    const updatedItems = checklistItems.map(item =>
-      item.id === id ? { ...item, completed: !item.completed } : item
-    );
-    setChecklistItems(updatedItems);
-    saveParentingChecklist(updatedItems);
-  };
-
-  const updateItemNotes = (id: string, notes: string) => {
-    const updatedItems = checklistItems.map(item =>
-      item.id === id ? { ...item, notes } : item
-    );
-    setChecklistItems(updatedItems);
-    saveParentingChecklist(updatedItems);
-  };
-
-  const clearSection = () => {
-    if (showClearConfirm) {
-      clearStorageSection(STORAGE_KEYS.PARENTING_CHECKLIST);
-      // Reset to default checklist
-      const initialItems: ParentingChecklistItem[] = defaultChecklist.map((item, index) => ({
-        id: `default-${index}`,
-        ...item,
-        completed: false,
-        notes: '',
-      }));
-      setChecklistItems(initialItems);
-      saveParentingChecklist(initialItems);
-      setShowClearConfirm(false);
-      setExpandedNotes(null);
-    } else {
-      setShowClearConfirm(true);
-    }
-  };
-
-  // Group items by category
-  const groupedItems = checklistItems.reduce((acc, item) => {
-    if (!acc[item.category]) {
-      acc[item.category] = [];
-    }
-    acc[item.category].push(item);
-    return acc;
-  }, {} as Record<string, ParentingChecklistItem[]>);
-
-  const getCompletionStats = () => {
-    const completed = checklistItems.filter(item => item.completed).length;
-    const total = checklistItems.length;
-    return { completed, total, percentage: total > 0 ? Math.round((completed / total) * 100) : 0 };
-  };
-
-  const stats = getCompletionStats();
+  const currentSchedule = custodySchedules[selectedSchedule];
+  const currentAgeGroup = ageGroupConsiderations[selectedAgeGroup];
 
   return (
-    <div className="max-w-4xl mx-auto p-8 space-y-8">
+    <div className="max-w-6xl mx-auto p-8 space-y-12">
       {/* Header */}
-      <div className="space-y-4">
-        <div className="flex items-center gap-3">
-          <Baby className="text-sage-600" size={32} />
-          <h1 className="text-3xl font-semibold text-sage-800">Focusing on the children</h1>
-        </div>
-        <p className="text-lg text-slate-600 leading-relaxed">
-          When parents separate, thoughtful planning helps children feel secure and loved. 
-          This checklist covers important topics to discuss and decide together, 
-          always keeping your children's best interests at heart.
+      <div className="text-center space-y-6">
+        <h1 className="text-4xl font-light text-sage-900">Custody arrangement planner</h1>
+        <p className="text-xl text-neutral-700 max-w-4xl mx-auto leading-relaxed">
+          Interactive tools to explore custody schedules, communication strategies, and 
+          age-appropriate arrangements that prioritize your children's wellbeing.
         </p>
       </div>
 
-      {/* Progress Summary */}
-      <div className="bg-sage-50 border border-sage-200 rounded-lg p-6">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-medium text-sage-800">Co-parenting planning progress</h2>
-          <div className="text-sage-600">
-            <span className="text-2xl font-semibold">{stats.completed}</span>
-            <span className="text-lg">/{stats.total}</span>
-          </div>
+      {/* Age Group Selector */}
+      <div className="space-y-6">
+        <h2 className="text-2xl font-semibold text-neutral-800 text-center">Your child's age group</h2>
+        <div className="grid md:grid-cols-3 gap-4">
+          {Object.entries(ageGroupConsiderations).map(([key, ageGroup]) => (
+            <button
+              key={key}
+              onClick={() => setSelectedAgeGroup(key)}
+              className={`p-4 rounded-xl border-2 text-left transition-all ${
+                selectedAgeGroup === key
+                  ? 'border-sage-300 bg-sage-50 shadow-md'
+                  : 'border-neutral-200 bg-white hover:border-sage-200 hover:shadow-sm'
+              }`}
+            >
+              <h3 className="font-semibold text-neutral-800 mb-2">{ageGroup.title}</h3>
+            </button>
+          ))}
         </div>
-        <div className="w-full bg-sage-200 rounded-full h-3 mb-2">
-          <div 
-            className="bg-sage-500 h-3 rounded-full transition-all duration-300"
-            style={{ width: `${stats.percentage}%` }}
-          ></div>
+
+        {/* Age Group Considerations */}
+        <div className="bg-blue-50 border border-blue-200 rounded-xl p-6">
+          <h3 className="text-xl font-semibold text-blue-900 mb-4">{currentAgeGroup.title} Considerations</h3>
+          <ul className="space-y-2">
+            {currentAgeGroup.considerations.map((consideration, index) => (
+              <li key={index} className="flex items-start gap-2 text-blue-800">
+                <span className="w-1.5 h-1.5 bg-blue-600 rounded-full mt-2 flex-shrink-0"></span>
+                {consideration}
+              </li>
+            ))}
+          </ul>
         </div>
-        <p className="text-sm text-sage-700">
-          {stats.percentage}% complete - You're making great progress thinking through these important decisions.
-        </p>
       </div>
 
-      {/* Guidance */}
-      <div className="bg-calm-50 border border-calm-200 rounded-lg p-6">
-        <h3 className="font-medium text-calm-800 mb-3">Remember as you work through this</h3>
-        <div className="space-y-2 text-sm text-calm-700">
-          <p>• <strong>Children's needs come first:</strong> Focus on what will help your children feel secure and loved.</p>
-          <p>• <strong>Flexibility is important:</strong> As children grow, arrangements may need to change.</p>
-          <p>• <strong>Quality over quantity:</strong> Meaningful time together matters more than hours on a schedule.</p>
-          <p>• <strong>Consistency helps:</strong> Children thrive with predictable routines and clear expectations.</p>
-          <p>• <strong>Communication matters:</strong> How you talk to and about each other affects your children.</p>
+      {/* Custody Schedule Selector */}
+      <div className="space-y-6">
+        <h2 className="text-2xl font-semibold text-neutral-800 text-center">Custody schedule options</h2>
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+          {Object.entries(custodySchedules).map(([key, schedule]) => (
+            <button
+              key={key}
+              onClick={() => setSelectedSchedule(key)}
+              className={`p-4 rounded-xl border-2 text-left transition-all ${
+                selectedSchedule === key
+                  ? 'border-sage-300 bg-sage-50 shadow-md'
+                  : 'border-neutral-200 bg-white hover:border-sage-200 hover:shadow-sm'
+              }`}
+            >
+              <h3 className="font-semibold text-neutral-800 mb-2">{schedule.name}</h3>
+              <p className="text-sm text-neutral-600">{schedule.description}</p>
+            </button>
+          ))}
         </div>
       </div>
 
-      {/* Checklist by Category */}
-      <div className="space-y-8">
-        {Object.entries(groupedItems).map(([category, items]) => (
-          <div key={category} className="space-y-4">
-            <h2 className="text-xl font-medium text-slate-800 border-b border-slate-200 pb-2">
-              {category}
-            </h2>
-            <div className="space-y-3">
-              {items.map((item) => (
-                <div key={item.id} className="bg-white border border-slate-200 rounded-lg p-4">
-                  <div className="flex items-start gap-3">
-                    <button
-                      onClick={() => toggleItemCompletion(item.id)}
-                      className={`
-                        mt-1 p-1 rounded border-2 transition-colors duration-200
-                        ${item.completed 
-                          ? 'bg-sage-500 border-sage-500 text-white' 
-                          : 'border-slate-300 hover:border-sage-400'
-                        }
-                      `}
-                    >
-                      {item.completed && <Check size={14} />}
-                    </button>
-                    
-                    <div className="flex-1">
-                      <h3 className={`
-                        font-medium transition-colors duration-200
-                        ${item.completed 
-                          ? 'text-sage-700 line-through' 
-                          : 'text-slate-800'
-                        }
-                      `}>
-                        {item.item}
-                      </h3>
-                      
-                      {/* Notes Section */}
-                      <div className="mt-2">
-                        <button
-                          onClick={() => setExpandedNotes(
-                            expandedNotes === item.id ? null : item.id
-                          )}
-                          className="flex items-center gap-1 text-sm text-slate-600 hover:text-slate-800"
-                        >
-                          <MessageCircle size={14} />
-                          {item.notes ? 'Edit notes' : 'Add notes'}
-                        </button>
-                        
-                        {expandedNotes === item.id && (
-                          <div className="mt-2">
-                            <textarea
-                              value={item.notes || ''}
-                              onChange={(e) => updateItemNotes(item.id, e.target.value)}
-                              placeholder="Add your thoughts, agreements, or questions about this topic..."
-                              className="w-full p-3 border border-slate-300 rounded text-sm resize-vertical min-h-[80px] focus:ring-2 focus:ring-sage-500"
-                            />
-                          </div>
-                        )}
-                        
-                        {item.notes && expandedNotes !== item.id && (
-                          <div className="mt-1 p-2 bg-slate-50 border border-slate-200 rounded text-sm text-slate-700">
-                            {item.notes.length > 100 
-                              ? `${item.notes.substring(0, 100)}...` 
-                              : item.notes
-                            }
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  </div>
+      {/* Selected Schedule Details */}
+      <div className="bg-sage-50 border border-sage-200 rounded-xl p-8">
+        <h2 className="text-3xl font-semibold text-sage-900 mb-4">{currentSchedule.name}</h2>
+        <p className="text-lg text-sage-800 mb-6">{currentSchedule.description}</p>
+        
+        <div className="grid lg:grid-cols-2 gap-8">
+          {/* Schedule Details */}
+          <div className="space-y-6">
+            <div>
+              <h3 className="text-lg font-semibold text-sage-800 mb-3 flex items-center gap-2">
+                <Calendar size={20} />
+                Weekly Pattern
+              </h3>
+              <ul className="space-y-2">
+                {currentSchedule.weeklyPattern.map((pattern, index) => (
+                  <li key={index} className="text-sage-700 bg-white rounded-lg p-3">
+                    {pattern}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div>
+              <h3 className="text-lg font-semibold text-sage-800 mb-3 flex items-center gap-2">
+                <Clock size={20} />
+                Implementation Details
+              </h3>
+              <div className="space-y-3">
+                <div className="bg-white rounded-lg p-3">
+                  <strong>Pickup/Dropoff:</strong> {currentSchedule.details.pickupDropoff}
                 </div>
-              ))}
+                <div className="bg-white rounded-lg p-3">
+                  <strong>School Nights:</strong> {currentSchedule.details.schoolNights}
+                </div>
+                <div className="bg-white rounded-lg p-3">
+                  <strong>Activities:</strong> {currentSchedule.details.extracurriculars}
+                </div>
+              </div>
             </div>
           </div>
-        ))}
-      </div>
 
-      {/* Supporting Resources */}
-      <div className="bg-slate-50 border border-slate-200 rounded-lg p-6">
-        <h3 className="font-medium text-slate-800 mb-3">Additional support for co-parenting</h3>
-        <div className="space-y-2 text-sm text-slate-700">
-          <p>• <strong>Parenting classes:</strong> Many courts offer or require co-parenting education programs.</p>
-          <p>• <strong>Family counseling:</strong> A therapist can help you and your children navigate this transition.</p>
-          <p>• <strong>Mediation:</strong> Professional mediators can help you work through disagreements.</p>
-          <p>• <strong>Legal guidance:</strong> An attorney can ensure your parenting plan meets Ohio legal requirements.</p>
-          <p>• <strong>Support groups:</strong> Connecting with other parents in similar situations can be helpful.</p>
-        </div>
-      </div>
+          {/* Pros and Cons */}
+          <div className="space-y-6">
+            <div>
+              <h3 className="text-lg font-semibold text-sage-800 mb-3">Advantages</h3>
+              <ul className="space-y-2">
+                {currentSchedule.pros.map((pro, index) => (
+                  <li key={index} className="flex items-start gap-2 text-sage-700">
+                    <span className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></span>
+                    <span className="bg-white rounded-lg p-2 flex-1">{pro}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
 
-      {/* Clear Section */}
-      <div className="border-t border-slate-200 pt-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <h3 className="font-medium text-slate-800">Reset checklist</h3>
-            <p className="text-sm text-slate-600">This will clear all your progress and notes, starting fresh with the full checklist.</p>
+            <div>
+              <h3 className="text-lg font-semibold text-sage-800 mb-3">Considerations</h3>
+              <ul className="space-y-2">
+                {currentSchedule.cons.map((con, index) => (
+                  <li key={index} className="flex items-start gap-2 text-sage-700">
+                    <span className="w-2 h-2 bg-orange-500 rounded-full mt-2 flex-shrink-0"></span>
+                    <span className="bg-white rounded-lg p-2 flex-1">{con}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
-          <button
-            onClick={clearSection}
-            className={`
-              px-4 py-2 rounded-lg font-medium transition-colors duration-200 flex items-center gap-2
-              ${showClearConfirm 
-                ? 'bg-red-600 hover:bg-red-700 text-white' 
-                : 'bg-slate-200 hover:bg-slate-300 text-slate-700'
-              }
-            `}
-          >
-            <Trash2 size={16} />
-            {showClearConfirm ? 'Confirm: Reset checklist' : 'Reset checklist'}
-          </button>
         </div>
-        {showClearConfirm && (
-          <div className="mt-3 p-3 bg-red-50 border border-red-200 rounded-lg">
-            <p className="text-sm text-red-700">
-              Are you sure? This will clear all your progress and notes. 
+
+        <div className="mt-6 p-4 bg-blue-100 rounded-lg">
+          <p className="text-blue-900">
+            <strong>Age Suitability:</strong> {currentSchedule.ageRange}
+          </p>
+        </div>
+      </div>
+
+      {/* Communication Strategies */}
+      <div className="space-y-6">
+        <h2 className="text-2xl font-semibold text-neutral-800 text-center">Co-parenting communication strategies</h2>
+        <div className="grid md:grid-cols-2 gap-6">
+          {communicationStrategies.map((strategy, index) => (
+            <div key={index} className="bg-white border border-neutral-200 rounded-xl p-6">
+              <h3 className="font-semibold text-neutral-800 mb-3 flex items-center gap-2">
+                <Phone size={18} />
+                {strategy.scenario}
+              </h3>
+              <p className="text-neutral-700 mb-4">{strategy.strategy}</p>
+              
               <button
-                onClick={() => setShowClearConfirm(false)}
-                className="ml-2 underline hover:no-underline"
+                onClick={() => setShowCommunicationTips(showCommunicationTips === strategy.scenario ? null : strategy.scenario)}
+                className="text-blue-600 hover:text-blue-800 font-medium"
               >
-                Cancel
+                {showCommunicationTips === strategy.scenario ? 'Hide details' : 'View strategy details'}
               </button>
-            </p>
-          </div>
-        )}
+
+              {showCommunicationTips === strategy.scenario && (
+                <div className="mt-4 space-y-3">
+                  <div>
+                    <h4 className="font-medium text-neutral-800 mb-2">Implementation Tips:</h4>
+                    <ul className="text-sm text-neutral-600 space-y-1">
+                      {strategy.tips.map((tip, tipIndex) => (
+                        <li key={tipIndex} className="flex items-start gap-2">
+                          <span className="w-1 h-1 bg-neutral-400 rounded-full mt-2 flex-shrink-0"></span>
+                          {tip}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div className="bg-blue-50 rounded-lg p-3">
+                    <strong className="text-blue-900">Example:</strong>
+                    <p className="text-blue-800 text-sm mt-1">{strategy.example}</p>
+                  </div>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Ohio Resources */}
+      <div className="space-y-6">
+        <h2 className="text-2xl font-semibold text-neutral-800 text-center">Ohio custody resources</h2>
+        <div className="grid md:grid-cols-2 gap-6">
+          {ohioResources.map((resource, index) => (
+            <div key={index} className="bg-white border border-neutral-200 rounded-xl p-6">
+              <div className="flex items-start gap-4">
+                <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
+                  resource.type === 'legal' ? 'bg-blue-100' :
+                  resource.type === 'education' ? 'bg-purple-100' :
+                  resource.type === 'financial' ? 'bg-green-100' : 'bg-orange-100'
+                }`}>
+                  {resource.type === 'legal' && <BookOpen className="text-blue-600" size={20} />}
+                  {resource.type === 'education' && <Users className="text-purple-600" size={20} />}
+                  {resource.type === 'financial' && <Calculator className="text-green-600" size={20} />}
+                  {resource.type === 'tool' && <Phone className="text-orange-600" size={20} />}
+                </div>
+                <div className="flex-1">
+                  <h3 className="font-semibold text-neutral-800 mb-2">{resource.name}</h3>
+                  <p className="text-neutral-600 mb-3">{resource.description}</p>
+                  <a 
+                    href={resource.link} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-800 font-medium"
+                  >
+                    <ExternalLink size={16} />
+                    Access Resource
+                  </a>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Professional Disclaimer */}
+      <div className="text-center p-6 bg-neutral-50 rounded-xl border border-neutral-200">
+        <p className="text-neutral-700 leading-relaxed">
+          <strong>Professional notice:</strong> Custody arrangements must be approved by Ohio courts and should consider each family's unique circumstances. 
+          Consult with family law attorneys and child development professionals for personalized guidance.
+        </p>
       </div>
     </div>
   );

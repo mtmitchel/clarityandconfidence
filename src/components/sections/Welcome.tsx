@@ -1,130 +1,176 @@
 import React from 'react';
-import { Heart, Shield, Lock, Info } from 'lucide-react';
+import { Shield, Calculator, Users, Scale, Heart, BookOpen, Info, CheckCircle2, Download, ArrowRight, Target, TrendingUp } from 'lucide-react';
 
 const Welcome: React.FC = () => {
   return (
-    <div className="max-w-4xl mx-auto p-8 space-y-8">
-      {/* Header */}
-      <div className="text-center space-y-4">
-        <h1 className="text-3xl font-semibold text-calm-800 leading-tight">
-          Your Personal Divorce Planning Resource
+    <div className="max-w-6xl mx-auto p-8 space-y-12">
+      {/* Hero Section */}
+      <div className="text-center space-y-6 py-8">
+        <h1 className="text-5xl font-light text-sage-900 leading-tight tracking-tight">
+          Clarity and confidence
         </h1>
-        <p className="text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed">
-          This tool was created specifically to help you navigate this transition 
-          with greater clarity and confidence. Take your time, work at your own pace, 
-          and remember that you have support.
+        <p className="text-2xl text-sage-700 font-light max-w-3xl mx-auto leading-relaxed">
+          Ohio divorce resource hub
         </p>
+        <div className="max-w-4xl mx-auto">
+          <p className="text-xl text-neutral-700 leading-relaxed">
+            Interactive tools, scenario modeling, and trusted legal resources 
+            for Ohio residents navigating divorce proceedings. Everything stays private on your device.
+          </p>
+        </div>
+                
+        <div className="flex justify-center pt-4">
+          <div className="inline-flex items-center gap-3 bg-sage-100 text-sage-800 px-6 py-3 rounded-full border border-sage-200">
+            <Shield size={20} className="text-sage-600" />
+            <span className="font-medium">Complete privacy • No accounts • No tracking</span>
+          </div>
+        </div>
       </div>
 
-      {/* Main Content Cards */}
-      <div className="grid md:grid-cols-2 gap-6">
-        {/* Privacy & Safety Card */}
-        <div className="bg-sage-50 border border-sage-200 rounded-lg p-6 space-y-4">
-          <div className="flex items-center gap-3">
-            <div className="p-2 bg-sage-100 rounded-lg">
-              <Lock className="text-sage-600" size={24} />
+      {/* Core Value Proposition */}
+      <div className="grid md:grid-cols-3 gap-8">
+        <div className="text-center space-y-4 p-6 bg-white rounded-2xl border border-neutral-200 shadow-sm">
+          <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto">
+            <Target className="text-blue-600" size={28} />
+          </div>
+          <h3 className="text-xl font-semibold text-neutral-800">Interactive scenario modeling</h3>
+          <p className="text-neutral-600 leading-relaxed">
+            Explore different divorce paths, custody arrangements, and financial outcomes 
+            with evidence-based modeling tools.
+          </p>
+        </div>
+        <div className="text-center space-y-4 p-6 bg-white rounded-2xl border border-neutral-200 shadow-sm">
+          <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto">
+            <Calculator className="text-green-600" size={28} />
+          </div>
+          <h3 className="text-xl font-semibold text-neutral-800">Ohio child support calculator</h3>
+          <p className="text-neutral-600 leading-relaxed">
+            Calculate estimates using official Ohio guidelines.
+            Organize financial information for mediation and court filings.
+          </p>
+        </div>
+        <div className="text-center space-y-4 p-6 bg-white rounded-2xl border border-neutral-200 shadow-sm">
+          <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto">
+            <Scale className="text-purple-600" size={28} />
+          </div>
+          <h3 className="text-xl font-semibold text-neutral-800">Verified Ohio resources</h3>
+          <p className="text-neutral-600 leading-relaxed">
+            Direct links to Ohio Supreme Court forms, Legal Aid societies,
+            and verified professional services in your area.
+          </p>
+        </div>
+      </div>
+
+      {/* Available Tools */}
+      <div className="space-y-6">
+        <h2 className="text-3xl font-light text-neutral-800 text-center">Tools available to you</h2>
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="flex items-start gap-4 p-6 bg-white rounded-xl border border-neutral-200 hover:shadow-md transition-shadow">
+            <TrendingUp className="text-blue-600 mt-1 flex-shrink-0" size={24} />
+            <div>
+              <h3 className="font-semibold text-neutral-800 mb-2">Progress tracker</h3>
+              <p className="text-neutral-600 text-sm leading-relaxed">
+                Track your journey with actionable insights and milestone achievements.
+              </p>
             </div>
-            <h2 className="text-xl font-medium text-sage-800">Your privacy matters</h2>
           </div>
-          <div className="space-y-3 text-sage-700">
-            <p>Everything you enter here stays on your device only. We don't collect, store, or share any of your personal information.</p>
-            <p>You can clear any section at any time using the "Clear this section" buttons throughout the tool.</p>
-            <p className="flex items-start gap-2">
-              <Shield size={16} className="mt-1 text-sage-600 flex-shrink-0" />
-              <span className="text-sm">The red "Quick Escape" button in the top-right corner will instantly take you to Google if you need to leave quickly.</span>
-            </p>
-          </div>
-        </div>
-
-        {/* Support & Guidance Card */}
-        <div className="bg-calm-50 border border-calm-200 rounded-lg p-6 space-y-4">
-          <div className="flex items-center gap-3">
-            <div className="p-2 bg-calm-100 rounded-lg">
-              <Heart className="text-calm-600" size={24} />
+          <div className="flex items-start gap-4 p-6 bg-white rounded-xl border border-neutral-200 hover:shadow-md transition-shadow">
+            <Calculator className="text-green-600 mt-1 flex-shrink-0" size={24} />
+            <div>
+              <h3 className="font-semibold text-neutral-800 mb-2">Financial scenario modeling</h3>
+              <p className="text-neutral-600 text-sm leading-relaxed">
+                Ohio child support calculator, asset division planning, and tax implications.
+              </p>
             </div>
-            <h2 className="text-xl font-medium text-calm-800">Support and guidance</h2>
           </div>
-          <div className="space-y-3 text-calm-700">
-            <p>Navigating separation involves many complex decisions. This tool provides structured guidance to help you work through important considerations.</p>
-            <p>Work through sections in whatever order makes sense for your situation.</p>
-            <p>Remember: this tool provides general information and is not a substitute for legal advice from a qualified attorney.</p>
+          <div className="flex items-start gap-4 p-6 bg-white rounded-xl border border-neutral-200 hover:shadow-md transition-shadow">
+            <Scale className="text-purple-600 mt-1 flex-shrink-0" size={24} />
+            <div>
+              <h3 className="font-semibold text-neutral-800 mb-2">Legal path decision tool</h3>
+              <p className="text-neutral-600 text-sm leading-relaxed">
+                Interactive tool for divorce vs. dissolution decisions and jurisdiction guidance.
+              </p>
+            </div>
           </div>
-        </div>
-      </div>
-
-      {/* Important Notice */}
-      <div className="bg-slate-50 border border-slate-200 rounded-lg p-6">
-        <div className="flex items-start gap-3">
-          <Info className="text-slate-600 mt-1 flex-shrink-0" size={20} />
-          <div className="space-y-2">
-            <h3 className="font-medium text-slate-800">Important legal notice</h3>
-            <p className="text-slate-700 leading-relaxed">
-              This tool provides general educational information about separation and divorce in Ohio. 
-              It is not legal advice and should not replace consultation with a qualified attorney. 
-              Every situation is unique, and laws can change. For specific legal guidance about your 
-              circumstances, please consult with a licensed attorney in Ohio.
-            </p>
+          <div className="flex items-start gap-4 p-6 bg-white rounded-xl border border-neutral-200 hover:shadow-md transition-shadow">
+            <Users className="text-orange-600 mt-1 flex-shrink-0" size={24} />
+            <div>
+              <h3 className="font-semibold text-neutral-800 mb-2">Custody arrangement planner</h3>
+              <p className="text-neutral-600 text-sm leading-relaxed">
+                Age-appropriate schedules, communication strategies, and Ohio resources.
+              </p>
+            </div>
           </div>
-        </div>
-      </div>
-
-      {/* How to Use This Tool */}
-      <div className="space-y-4">
-        <h2 className="text-2xl font-medium text-slate-800">How to use this tool</h2>
-        <div className="grid md:grid-cols-2 gap-4">
-          <div className="bg-white border border-slate-200 rounded-lg p-4">
-            <h3 className="font-medium text-slate-800 mb-2">Work at your own pace</h3>
-            <p className="text-slate-600 text-sm leading-relaxed">
-              Use the sidebar to move between sections. Complete them in whatever order 
-              makes sense for your situation.
-            </p>
+          <div className="flex items-start gap-4 p-6 bg-white rounded-xl border border-neutral-200 hover:shadow-md transition-shadow">
+            <Target className="text-indigo-600 mt-1 flex-shrink-0" size={24} />
+            <div>
+              <h3 className="font-semibold text-neutral-800 mb-2">Divorce process timeline</h3>
+              <p className="text-neutral-600 text-sm leading-relaxed">
+                Interactive timeline modeling for different divorce scenarios and outcomes.
+              </p>
+            </div>
           </div>
-          <div className="bg-white border border-slate-200 rounded-lg p-4">
-            <h3 className="font-medium text-slate-800 mb-2">Your information is saved</h3>
-            <p className="text-slate-600 text-sm leading-relaxed">
-              Information you enter is automatically saved to your device so you can 
-              return to it later.
-            </p>
-          </div>
-          <div className="bg-white border border-slate-200 rounded-lg p-4">
-            <h3 className="font-medium text-slate-800 mb-2">Take breaks as needed</h3>
-            <p className="text-slate-600 text-sm leading-relaxed">
-              You can step away and return anytime. Your progress will be saved.
-            </p>
-          </div>
-          <div className="bg-white border border-slate-200 rounded-lg p-4">
-            <h3 className="font-medium text-slate-800 mb-2">Professional support</h3>
-            <p className="text-slate-600 text-sm leading-relaxed">
-              The "Finding local support" section includes counselors, mediators, and legal aid 
-              resources available in Hamilton County.
-            </p>
+          <div className="flex items-start gap-4 p-6 bg-white rounded-xl border border-neutral-200 hover:shadow-md transition-shadow">
+            <BookOpen className="text-teal-600 mt-1 flex-shrink-0" size={24} />
+            <div>
+              <h3 className="font-semibold text-neutral-800 mb-2">Trusted resources</h3>
+              <p className="text-neutral-600 text-sm leading-relaxed">
+                Evidence-based resources, support communities, and professional services.
+              </p>
+            </div>
           </div>
         </div>
       </div>
 
       {/* Getting Started */}
-      <div className="text-center pt-6">
-        <p className="text-slate-600 mb-4">
-          Choose a section from the sidebar to begin.
-        </p>
-        <p className="text-sm text-slate-500">
-          Many people start with "Checking in" to assess their current situation.
-        </p>
-      </div>
-
-      {/* Personal Privacy Reminder */}
-      <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mt-6">
-        <div className="flex items-start gap-3">
-          <Shield className="text-blue-600 mt-1 flex-shrink-0" size={20} />
-          <div className="space-y-2">
-            <h3 className="font-medium text-blue-800">Your Personal Space</h3>
-            <p className="text-blue-700 leading-relaxed text-sm">
-              This tool was created specifically for you. All your information stays completely 
-              private on your device. You can bookmark this page and return anytime. 
-              Consider using a private/incognito browser if you're on a shared computer.
-            </p>
+      <div className="bg-gradient-to-r from-sage-50 to-blue-50 rounded-2xl p-8">
+        <div className="text-center space-y-6">
+          <h2 className="text-3xl font-light text-neutral-800">Ready to get started?</h2>
+          <p className="text-lg text-neutral-700 max-w-2xl mx-auto leading-relaxed">
+            Most people begin with the legal path decision tool or financial scenario modeling.
+            Choose any section from the sidebar to start exploring your options.
+          </p>
+                    
+          <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
+            <div className="flex items-center gap-3 bg-white px-6 py-3 rounded-full border border-neutral-200 shadow-sm">
+              <CheckCircle2 size={20} className="text-green-600" />
+              <span className="text-neutral-700 font-medium">Start with any section</span>
+            </div>
+            <div className="flex items-center gap-3 bg-white px-6 py-3 rounded-full border border-neutral-200 shadow-sm">
+              <Download size={20} className="text-blue-600" />
+              <span className="text-neutral-700 font-medium">Export your insights anytime</span>
+            </div>
           </div>
         </div>
+      </div>
+
+      {/* Data Privacy - Contextual placement */}
+      <div className="bg-blue-50 border border-blue-200 rounded-xl p-6">
+        <div className="flex items-start gap-4">
+          <Info className="text-blue-600 mt-1 flex-shrink-0" size={24} />
+          <div className="space-y-3">
+            <h3 className="text-lg font-semibold text-blue-900">About your data</h3>
+            <div className="space-y-2 text-blue-800">
+              <p>
+                Your information is stored locally in this browser only. It never leaves your device 
+                and isn't shared with any external services.
+              </p>
+              <p className="text-blue-700">
+                <strong>Important:</strong> Use regular browsing mode (not private/incognito) and export 
+                your insights regularly using the download buttons in each section to prevent loss.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Legal Notice - Professional but not alarming */}
+      <div className="text-center p-6 bg-neutral-50 rounded-xl border border-neutral-200">
+        <p className="text-neutral-700 leading-relaxed">
+          <strong>Legal notice:</strong> This application provides educational information and organizational tools only. 
+          It does not constitute legal advice. Always consult with a qualified Ohio family law attorney 
+          for advice specific to your situation.
+        </p>
       </div>
     </div>
   );

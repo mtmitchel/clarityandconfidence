@@ -1,28 +1,24 @@
 import React, { useState, useEffect } from 'react';
-import { BarChart3, TrendingUp, Calendar, AlertCircle, Heart, CheckCircle2, Target } from 'lucide-react';
+import { TrendingUp, Calendar, AlertCircle, CheckCircle2, Target } from 'lucide-react';
 import { 
   loadDashboardData, 
   saveDashboardData, 
-  loadMoodEntries, 
   loadTimelineItems,
   loadAssetDebtList,
   loadParentingChecklist,
-  loadJournalEntry,
   loadLegalPathData,
   DashboardData,
-  MoodEntry,
   TimelineItem
 } from '../../lib/storage';
 
 const Dashboard: React.FC = () => {
-  const [dashboardData, setDashboardData] = useState<DashboardData>({
+  const [dashboardData, setDashboardData] = useState<Omit<DashboardData, 'weeklyMoodAverage'>>({
     lastUpdated: '',
     sectionsCompleted: [],
     totalProgress: 0,
     urgentTasks: 0,
     upcomingDeadlines: 0,
   });
-  const [moodEntries, setMoodEntries] = useState<MoodEntry[]>([]);
   const [timelineItems, setTimelineItems] = useState<TimelineItem[]>([]);
 
   useEffect(() => {
@@ -31,26 +27,21 @@ const Dashboard: React.FC = () => {
 
   const calculateDashboardData = () => {
     // Load all data
-    const mood = loadMoodEntries();
     const timeline = loadTimelineItems();
     const assets = loadAssetDebtList();
     const parenting = loadParentingChecklist();
-    const journal = loadJournalEntry();
     const legalPath = loadLegalPathData();
 
-    setMoodEntries(mood);
     setTimelineItems(timeline);
 
     // Calculate section completion
     const sectionsCompleted: string[] = [];
-    let totalSections = 6; // Total sections to track
+    let totalSections = 4; // Total sections to track
 
-    if (journal.content.trim()) sectionsCompleted.push('checking-in');
     if (assets.length > 0) sectionsCompleted.push('understanding-money');
     if (legalPath.recommendation) sectionsCompleted.push('legal-paths');
     if (parenting.some(item => item.completed)) sectionsCompleted.push('children');
     if (timeline.length > 0) sectionsCompleted.push('timeline');
-    if (mood.length > 0) sectionsCompleted.push('mood-tracking');
 
     const totalProgress = Math.round((sectionsCompleted.length / totalSections) * 100);
 
@@ -69,45 +60,20 @@ const Dashboard: React.FC = () => {
       return diffDays <= 7 && diffDays >= 0;
     }).length;
 
-    // Calculate weekly mood average
-    const weekAgo = new Date();
-    weekAgo.setDate(weekAgo.getDate() - 7);
-    const recentMoods = mood.filter(entry => new Date(entry.date) >= weekAgo);
-    const weeklyMoodAverage = recentMoods.length > 0 
-      ? Math.round(recentMoods.reduce((sum, entry) => sum + entry.mood, 0) / recentMoods.length)
-      : undefined;
-
-    const newDashboardData: DashboardData = {
+    const newDashboardData: Omit<DashboardData, 'weeklyMoodAverage'> = {
       lastUpdated: new Date().toISOString(),
       sectionsCompleted,
       totalProgress,
-      weeklyMoodAverage,
       urgentTasks,
       upcomingDeadlines,
     };
 
     setDashboardData(newDashboardData);
-    saveDashboardData(newDashboardData);
-  };
-
-  const getMoodTrend = () => {
-    if (moodEntries.length < 2) return null;
-    const recent = moodEntries.slice(-7); // Last 7 entries
-    const firstHalf = recent.slice(0, Math.floor(recent.length / 2));
-    const secondHalf = recent.slice(Math.floor(recent.length / 2));
-    
-    const firstAvg = firstHalf.reduce((sum, entry) => sum + entry.mood, 0) / firstHalf.length;
-    const secondAvg = secondHalf.reduce((sum, entry) => sum + entry.mood, 0) / secondHalf.length;
-    
-    return secondAvg > firstAvg ? 'improving' : secondAvg < firstAvg ? 'declining' : 'stable';
+    saveDashboardData({ ...newDashboardData, weeklyMoodAverage: undefined });
   };
 
   const getNextActions = () => {
     const actions: string[] = [];
-    
-    if (!dashboardData.sectionsCompleted.includes('checking-in')) {
-      actions.push('Start with a personal check-in to reflect on your current situation');
-    }
     
     if (!dashboardData.sectionsCompleted.includes('understanding-money')) {
       actions.push('Begin tracking your assets and debts for financial clarity');
@@ -121,14 +87,13 @@ const Dashboard: React.FC = () => {
       actions.push(`Review ${dashboardData.upcomingDeadlines} upcoming deadline${dashboardData.upcomingDeadlines > 1 ? 's' : ''}`);
     }
     
-    if (!dashboardData.weeklyMoodAverage) {
-      actions.push('Start tracking your daily mood and wellbeing');
+    if (!dashboardData.sectionsCompleted.includes('legal-paths')) {
+      actions.push('Explore your legal path options to understand next steps');
     }
-    
+
     return actions.slice(0, 3); // Show max 3 actions
   };
 
-  const moodTrend = getMoodTrend();
   const nextActions = getNextActions();
 
   return (
@@ -136,16 +101,15 @@ const Dashboard: React.FC = () => {
       {/* Header */}
       <div className="space-y-4">
         <div className="flex items-center gap-3">
-          <BarChart3 className="text-calm-600" size={32} />
           <h1 className="text-3xl font-semibold text-calm-800">Your Dashboard</h1>
         </div>
         <p className="text-lg text-slate-600 leading-relaxed">
-          Track your progress, monitor your wellbeing, and see your next steps at a glance.
+          Track your progress and see your next steps at a glance.
         </p>
       </div>
 
       {/* Key Metrics Grid */}
-      <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
         {/* Overall Progress */}
         <div className="bg-white border border-slate-200 rounded-lg p-6">
           <div className="flex items-center justify-between mb-4">
@@ -161,36 +125,8 @@ const Dashboard: React.FC = () => {
               ></div>
             </div>
             <p className="text-sm text-slate-600">
-              {dashboardData.sectionsCompleted.length} of 6 sections started
+              {dashboardData.sectionsCompleted.length} of 4 sections started
             </p>
-          </div>
-        </div>
-
-        {/* Weekly Mood */}
-        <div className="bg-white border border-slate-200 rounded-lg p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="font-medium text-slate-800">Weekly Mood</h3>
-            <Heart className="text-rose-500" size={20} />
-          </div>
-          <div className="space-y-2">
-            {dashboardData.weeklyMoodAverage ? (
-              <>
-                <div className="text-3xl font-semibold text-slate-700">
-                  {dashboardData.weeklyMoodAverage}/10
-                </div>
-                {moodTrend && (
-                  <div className={`text-sm ${
-                    moodTrend === 'improving' ? 'text-green-600' : 
-                    moodTrend === 'declining' ? 'text-red-600' : 'text-slate-600'
-                  }`}>
-                    {moodTrend === 'improving' ? '↗ Improving' : 
-                     moodTrend === 'declining' ? '↘ Needs attention' : '→ Stable'}
-                  </div>
-                )}
-              </>
-            ) : (
-              <div className="text-sm text-slate-500">Start tracking to see trends</div>
-            )}
           </div>
         </div>
 
@@ -240,48 +176,21 @@ const Dashboard: React.FC = () => {
       </div>
 
       {/* Recent Activity */}
-      <div className="grid md:grid-cols-2 gap-6">
-        {/* Completed Sections */}
-        <div className="bg-white border border-slate-200 rounded-lg p-6">
-          <h3 className="font-medium text-slate-800 mb-4">Sections In Progress</h3>
-          <div className="space-y-2">
-            {dashboardData.sectionsCompleted.length > 0 ? (
-              dashboardData.sectionsCompleted.map((section) => (
-                <div key={section} className="flex items-center gap-2">
-                  <CheckCircle2 className="text-green-500" size={16} />
-                  <span className="text-slate-700 capitalize">
-                    {section.replace('-', ' ')}
-                  </span>
-                </div>
-              ))
-            ) : (
-              <p className="text-slate-500 text-sm">Start exploring the sections to track your progress</p>
-            )}
-          </div>
-        </div>
-
-        {/* Recent Mood Entries */}
-        <div className="bg-white border border-slate-200 rounded-lg p-6">
-          <h3 className="font-medium text-slate-800 mb-4">Recent Mood Check-ins</h3>
-          <div className="space-y-2">
-            {moodEntries.slice(-3).reverse().map((entry) => (
-              <div key={entry.id} className="flex items-center justify-between">
-                <span className="text-sm text-slate-600">
-                  {new Date(entry.date).toLocaleDateString()}
+      <div className="bg-white border border-slate-200 rounded-lg p-6">
+        <h3 className="font-medium text-slate-800 mb-4">Sections In Progress</h3>
+        <div className="space-y-2">
+          {dashboardData.sectionsCompleted.length > 0 ? (
+            dashboardData.sectionsCompleted.map((section) => (
+              <div key={section} className="flex items-center gap-2">
+                <CheckCircle2 className="text-green-500" size={16} />
+                <span className="text-slate-700 capitalize">
+                  {section.replace('-', ' ')}
                 </span>
-                <div className="flex items-center gap-2">
-                  <span className="text-sm text-slate-700">{entry.mood}/10</span>
-                  <div className={`w-3 h-3 rounded-full ${
-                    entry.mood >= 7 ? 'bg-green-400' :
-                    entry.mood >= 4 ? 'bg-yellow-400' : 'bg-red-400'
-                  }`}></div>
-                </div>
               </div>
-            ))}
-            {moodEntries.length === 0 && (
-              <p className="text-slate-500 text-sm">Start tracking your mood to see patterns</p>
-            )}
-          </div>
+            ))
+          ) : (
+            <p className="text-slate-500 text-sm">Start exploring the sections to track your progress</p>
+          )}
         </div>
       </div>
 
